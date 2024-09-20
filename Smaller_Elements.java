@@ -2,37 +2,69 @@ import java.io.*;
 import java.util.*;
 
 public class Smaller_Elements {
-    public static long array(int[] arr)
+    static long count=0;
+    static void mergeSort(int arr[],int s,int e)
     {
-        List<Long> ans=new ArrayList<>();
-        List<Long> temp=new ArrayList<>();
-        int n=arr.length;
-        for(long i=n-1;i>=0;i--)
+        if(s<e)
         {
-            long c=Collections.binarySearch(temp,arr[i]);
-            if(c<0) c=-c-1;
-            ans.add(c);
-            temp.add(c,arr[i]);
+            int  mid=(s+e)/2;
+            mergeSort(arr,s,mid);
+            mergeSort(arr,mid+1,e);
+            merge(arr,s,mid,e);
         }
-        long sum=0;
-        for(long x:ans)
+    }
+    static void merge(int arr[],int s,int mid,int e)
+    {
+        int i=s,j=mid+1,k=0;
+        int copy[]=new int[e-s+1];
+        while(i<=mid && j<=e)
         {
-            sum=sum+x;
+            if(arr[i]<=arr[j])
+            {
+                copy[k]=arr[i];
+                i++;
+            }
+            else
+            {
+                copy[k]=arr[j];
+                count=count+(long)mid-(long)i+(long)1;
+                j++;
+            }
+            k++;
         }
-        return sum;
+        while(i<=mid)
+        {
+            copy[k]=arr[i];
+            k++;
+            i++;
+        }
+        while(j<=e)
+        {
+            copy[k]=arr[j];
+            k++;
+            j++;
+        }
+        k=0;
+        for(i=s;i<=e;++i)
+        {
+            arr[i]=copy[k];
+            k++;
+        }
     }
     public static void main(String[] args) {
         Scanner sc=new Scanner(System.in);
-        long t=sc.nextLong();
+        int t=sc.nextInt();
         while(t-->0)
         {
-            long n=sc.nextLong();
-            long arr[]=new long[n];
-            for(long i=0;i<n;++i)
+            int n=sc.nextInt();
+            int arr[]=new int[n];
+            for(int i=0;i<n;++i)
             {
-                arr[i]=sc.nextLong();
+                arr[i]=sc.nextInt();
             }
-            System.out.println(array(arr));
+            mergeSort(arr,0,n-1);
+            System.out.println(count);
+            count=0;
         }
     }
 }
